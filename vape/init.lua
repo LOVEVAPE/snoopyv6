@@ -8,10 +8,11 @@ if not chatEvents then
     chatEvents.Parent = rs
 end
 
+local _converted = {}
 local function ensureRemote(name)
     local existing = chatEvents:FindFirstChild(name)
     if existing then
-        if existing.ClassName == "BindableEvent" then
+        if existing.ClassName ~= "RemoteEvent" then
             existing:Destroy()
             local ev = Instance.new("RemoteEvent")
             ev.Name = name
@@ -21,6 +22,18 @@ local function ensureRemote(name)
         local ev = Instance.new("RemoteEvent")
         ev.Name = name
         ev.Parent = chatEvents
+    end
+
+    if not _converted[name] then
+        _converted[name] = true
+        chatEvents.ChildAdded:Connect(function(child)
+            if child.Name == name and child.ClassName ~= "RemoteEvent" then
+                pcall(function() child:Destroy() end)
+                local ev = Instance.new("RemoteEvent")
+                ev.Name = name
+                ev.Parent = chatEvents
+            end
+        end)
     end
 end
 
