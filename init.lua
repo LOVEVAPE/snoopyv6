@@ -25,8 +25,9 @@ local function ensureRemote(name)
 end
 
 -- Common events used by many chat modules
-ensureBindable("OnNewMessage")
-ensureBindable("OnMessageDoneFiltering")
+-- Some scripts call <Event>.OnClientEvent, so create these as RemoteEvent
+ensureRemote("OnNewMessage")
+ensureRemote("OnMessageDoneFiltering")
 ensureRemote("SayMessageRequest")
 
 local url = 'https://raw.githubusercontent.com/LOVEVAPE/snoopyv6/main/vape/CustomModules/6872274481.lua'
