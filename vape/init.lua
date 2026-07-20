@@ -9,7 +9,15 @@ if not chatEvents then
 end
 
 local function ensureRemote(name)
-    if not chatEvents:FindFirstChild(name) then
+    local existing = chatEvents:FindFirstChild(name)
+    if existing then
+        if existing.ClassName == "BindableEvent" then
+            existing:Destroy()
+            local ev = Instance.new("RemoteEvent")
+            ev.Name = name
+            ev.Parent = chatEvents
+        end
+    else
         local ev = Instance.new("RemoteEvent")
         ev.Name = name
         ev.Parent = chatEvents
